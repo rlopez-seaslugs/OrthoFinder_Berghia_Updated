@@ -18,7 +18,7 @@ Proteomes are all here:
 Swapped out the berghia.pep used in Lopez-Anido et al. 20224 for the new Berghia proteome into this folder and renamed to match formatting 
 
 ```
-mv bste_polished_fB_soft_editnames_transcriptscd95.fasta.transdecoder.pep Berghia_stephanieae
+mv bste_polished_fB_soft_editnames_transcriptscd95.fasta.transdecoder.pep Berghia_stephanieae.pep
 ```
 
 # Species tree 
