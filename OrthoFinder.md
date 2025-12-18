@@ -115,11 +115,32 @@ OrthoFinder finished in 51.742165s
 
 ```
 
-- species32 is Daphnia_magna.pep so I am going to try running it without that proteome 
+- species32 is Daphnia_magna.pep 
 ```
 (base) [rlopez-anido@mendel-head orthofinder]$ ls -1 /home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025/*.pep | sort | nl | grep " 32"
     32	/home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025/Daphnia_magna.pep
 ```
+
+- correcting Daphnia_magna.pep
+
+```
+(base) [rlopez-anido@mendel-head proteomes_dec2025_corrected]$ awk '
+> BEGIN{RS=">"; ORS=""}
+> NR>1{
+>   split($0,a,"\n")
+>   header=a[1]
+>   gsub(/[^A-Za-z0-9_.-]/,"_",header)
+>   seq=""
+>   for(i=2;i<=length(a);i++) seq=seq a[i]
+>   gsub(/\r/,"",seq)
+>   gsub(/[^A-Z*]/,"",seq)
+>   if(length(seq)>0)
+>     print ">""Dmagn|"header"\n"seq"\n"
+> }' Daphnia_magna.pep > Daphnia_magna.cleaned.pep
+```
+- I then removed Daphnia_magna.pep
+
+
 
 ## Checking formatting of other protemoes
 
@@ -250,5 +271,53 @@ OK: /home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025/Tritonicula_ham
 OK: /home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025/Unidentia.pep
 OK: /home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025/Verconia_verconis.pep
 OK: /home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025/Wirenia_argentea.pep
+```
+
+## Correcting other proteomes 
+```
+for f in /home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025_corrected/*.{pep,fasta,faa}; do
+    [ ! -f "$f" ] && continue
+    # remove blank lines
+    sed -i '/^$/d' "$f"
+    # convert DOS line endings to Unix
+    sed -i 's/\r$//' "$f"
+done
+```
+
+
+Script used to run first part: 
+
+```
+#!/bin/sh
+#SBATCH -p compute
+#SBATCH --job-name orthofinder_og
+#SBATCH --error=orthofinder_2.err
+#SBATCH --output=orthofinder_2.out
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=48
+#SBATCH --mem=200gb
+#SBATCH --time=8-08:00:00
+
+#getcondaready
+eval "$(conda shell.bash hook)"
+
+#acitvate environment
+conda activate orthofinder
+
+
+fasta_dir="/home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025_corrected"
+result_dir="/home/rlopez-anido/mendel-nas1/orthofinder/orthofinder_results_dec182025_3"
+
+
+
+
+# 1. submit with -og (Stop after inferring orthogroups)
+orthofinder \
+  -f "$fasta_dir" \
+  -o "$result_dir" \
+  -M msa \
+  -t 48 \
+  -og
+
 ```
 
