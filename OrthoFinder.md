@@ -320,4 +320,13 @@ orthofinder \
   -og
 
 ```
+- still got the same error...
+- double checked and species 32 is actually Doryteuthis_pealeii.pep
+
+# reran using original proteome list but removing Doryteuthis_pealeii.pep 
+```
+
+
+
+```
 
