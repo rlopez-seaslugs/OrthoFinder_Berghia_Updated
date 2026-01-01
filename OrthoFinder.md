@@ -325,8 +325,44 @@ orthofinder \
 
 # reran using original proteome list but removing Doryteuthis_pealeii.pep 
 ```
+#!/bin/sh
+#SBATCH -p compute
+#SBATCH --job-name orthofinder_og
+#SBATCH --error=orthofinder_no32.err
+#SBATCH --output=orthofinder_no32.out
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=48
+#SBATCH --mem=200gb
+#SBATCH --time=8-08:00:00
+
+#getcondaready
+eval "$(conda shell.bash hook)"
+
+#acitvate environment
+conda activate orthofinder
 
 
+fasta_dir="/home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025_no32"
+result_dir="/home/rlopez-anido/mendel-nas1/orthofinder/orthofinder_results_dec182025_no32"
+
+
+
+
+# 1. submit with -og (Stop after inferring orthogroups)
+orthofinder \
+  -f "$fasta_dir" \
+  -o "$result_dir" \
+  -M msa \
+  -t 48 \
+  -og
 
 ```
+- success!!
+- Even though I wanted it to stop after inferring orthogroups it went all the way through the pipeline and built gene trees as well.
 
+- I tried wrapping the fasta file to see if that would work and then reran with the script below
+
+fold -w 60 -s Doryteuthis_pealeii.pep > Doryteuthis_pealeii_wrapped.pep
+then i renamed the file back to Doryteuthis_pealeii.pep
+
+# 
