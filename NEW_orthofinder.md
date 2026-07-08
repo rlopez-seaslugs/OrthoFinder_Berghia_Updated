@@ -80,6 +80,8 @@ orthofinder \
 
 
 ```
+- I realized Doryteuthis pealeii is still in the species tree... not sure if that matters... we will see
+
 
 # Output 
 
