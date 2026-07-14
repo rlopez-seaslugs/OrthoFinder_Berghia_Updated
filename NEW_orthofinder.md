@@ -67,21 +67,18 @@ eval "$(conda shell.bash hook)"
 conda activate of3_env
 
 
-fasta_dir="/home/rlopez-anido/mendel-nas1/orthofinder/proteomes_dec2025_no32"
-result_dir="/home/rlopez-anido/mendel-nas1/orthofinder/orthofinder_results_july2026"
-
 orthofinder \
-  -d "$fasta_dir" \
-  -o "$result_dir" \
+  -f proteomes_dec2025_no32 \
+  -o orthofinder_results_july2026 \
   -M msa \
   -t 48 \
-  -s species_tree_revised.tre
+  -s species_tree_revised_2.tre
 
 
 
 
 ```
-- I realized Doryteuthis pealeii is still in the species tree... not sure if that matters... we will see
+
 
 
 # Output 
